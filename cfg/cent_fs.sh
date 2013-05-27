@@ -1,27 +1,22 @@
 FSNAME=${FSNAME:-cent_fs}
+PARALLEL="yes"
+CLIENTONLY="yes"
+SLOW="no"
+MOUNT="/mnt/lustre"
 
 # facet hosts
 mds_HOST="MDS"
 mds_HOST=${mds_HOST:-`hostname`}
 mdsfailover_HOST=${mdsfailover_HOST}
-mds1_HOST=${mds1_HOST:-$mds_HOST}
-mds1failover_HOST=${mds1failover_HOST:-$mdsfailover_HOST}
-mgs_HOST=${mgs_HOST:-$mds1_HOST}
-ost_HOST="MDS"
+mgs_HOST=${mgs_HOST:-$mds_HOST}
 ost_HOST=${ost_HOST:-`hostname`}
 ostfailover_HOST=${ostfailover_HOST}
-CLIENTS="`hostname`"
+CLIENTS=""
 
 TMP=${TMP:-/tmp}
 
 DAEMONSIZE=${DAEMONSIZE:-500}
 MDSCOUNT=${MDSCOUNT:-1}
-[ $MDSCOUNT -gt 4 ] && MDSCOUNT=4
-[ $MDSCOUNT -gt 1 ] && IAMDIR=yes
-for num in $(seq $MDSCOUNT); do
-    eval mds${num}_HOST=\$\{mds${num}_HOST:-$mds_HOST\}
-    eval mds${num}failover_HOST=\$\{mds${num}failover_HOST:-$mdsfailover_HOST\}
-done
 MDSDEVBASE=${MDSDEVBASE:-$TMP/${FSNAME}-mdt}
 MDSSIZE=${MDSSIZE:-200000}
 #
@@ -42,7 +37,6 @@ MDSOPT=${MDSOPT:-}
 MDS_FS_MKFS_OPTS=${MDS_FS_MKFS_OPTS:-}
 MDS_MOUNT_OPTS=${MDS_MOUNT_OPTS:-}
 
-MGSDEV=${MGSDEV:-$MDSDEV1}
 MGSSIZE=${MGSSIZE:-$MDSSIZE}
 MGSOPT=${MGSOPT:-}
 MGS_FS_MKFS_OPTS=${MGS_FS_MKFS_OPTS:-}
@@ -77,13 +71,7 @@ FSTYPE=${FSTYPE:-ldiskfs}
 LDISKFS_MKFS_OPTS=${LDISKFS_MKFS_OPTS:-}
 ZFS_MKFS_OPTS=${ZFS_MKFS_OPTS:-}
 
-#
-# If any OST is "remote" and the non-default implementation (e.g.,
-# current OFD) is desired, then make sure that either a)
-# LOAD_MODULES_REMOTE is true or b) modprobe(8) is configured to
-# blacklist the undesired (and aliased the other, if necessary).
-#
-USE_OFD=${USE_OFD:-no}
+LOAD_MODULES_REMOTE=${LOAD_MODULES_REMOTE:-false}
 
 STRIPE_BYTES=${STRIPE_BYTES:-1048576}
 STRIPES_PER_OBJ=${STRIPES_PER_OBJ:-0}
@@ -108,7 +96,6 @@ LQUOTAOPTS=${LQUOTAOPTS:-"hash_lqs_cur_bits=3"}
 
 #client
 MOUNT=${MOUNT:-/mnt/${FSNAME}}
-MOUNT="/mnt/lustre"
 MOUNT1=${MOUNT1:-$MOUNT}
 MOUNT2=${MOUNT2:-${MOUNT}2}
 MOUNTOPT=${MOUNTOPT:-"-o user_xattr,flock"}
@@ -137,6 +124,7 @@ FAIL_ON_ERROR=${FAIL_ON_ERROR:-true}
 MPIRUN=$(which mpirun 2>/dev/null) || true
 MPI_USER=${MPI_USER:-mpiuser}
 SHARED_DIR_LOGS=${SHARED_DIR_LOGS:-""}
+MACHINEFILE_OPTION=${MACHINEFILE_OPTION:-"-machinefile"}
 
 # This is used by a small number of tests to share state between the client
 # running the tests, or in some cases between the servers (e.g. lfsck.sh).

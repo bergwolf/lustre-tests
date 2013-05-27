@@ -573,6 +573,7 @@ test_17m() {
 		skip "only for ldiskfs MDT" && return 0
 
 	[ $PARALLEL == "yes" ] && skip "skip parallel run" && return
+	remote_mds_nodsh && skip "remote MDS with nodsh" && return
 
 	mkdir -p $WDIR
 	long_sym=$short_sym
@@ -622,6 +623,8 @@ check_fs_consistency_17n() {
 	local devname
 	local cmd
 	local rc=0
+
+	remote_mds_nodsh && skip "remote MDS with nodsh" && return
 
 	for mdt_index in $(seq 1 $MDSCOUNT); do
 		devname=$(mdsdevname $mdt_index)
@@ -677,6 +680,8 @@ test_17o() {
 	local mdt_index
 	local mdtdevname
 	local rc=0
+
+	remote_mds_nodsh && skip "remote MDS with nodsh" && return
 
 	mkdir -p $WDIR
 	mdt_index=$($LFS getstripe -M $WDIR)
@@ -1702,6 +1707,7 @@ run_test 27y "create files while OST0 is degraded and the rest inactive"
 check_seq_oid()
 {
         log "check file $1"
+	remote_mds_nodsh && skip "remote MDS with nodsh" && return
 
         lmm_count=$($GETSTRIPE -c $1)
         lmm_seq=$($GETSTRIPE -v $1 | awk '/lmm_seq/ { print $2 }')
@@ -6328,6 +6334,7 @@ test_103 () {
 		skip_env "could not find setfacl" && return
 	$GSS && skip "could not run under gss" && return
 
+	remote_mds_nodsh && skip "remote MDS with nodsh" && return
 	declare -a identity_old
 
 	for num in $(seq $MDSCOUNT); do
@@ -8511,6 +8518,7 @@ test_133f() {
 		-exec cat '{}' \; > /dev/null ||
 			error "proc file read failed"
 
+	remote_ost_nodsh && skip "remote OST with nodsh" && return
 	for facet in $SINGLEMDS ost1; do
 		do_facet $facet find $proc_dirs \
 			-not -name req_history \
@@ -10979,6 +10987,7 @@ run_test 228a "try to reuse idle OI blocks"
 
 test_228b() {
 	[ $PARALLEL == "yes" ] && skip "skip parallel run" && return
+	remote_mds_nodsh && skip "remote MDS with nodsh" && return
 	[ "$(facet_fstype $SINGLEMDS)" != "ldiskfs" ] &&
 		skip "non-ldiskfs backend" && return
 

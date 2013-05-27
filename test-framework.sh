@@ -3536,6 +3536,7 @@ is_empty_fs() {
 }
 
 check_and_setup_lustre() {
+	return
     nfs_client_mode && return
 
     local MOUNTED=$(mounted_lustre_filesystems)

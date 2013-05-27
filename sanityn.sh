@@ -979,7 +979,9 @@ test_34() { #16129
         local OPER
         local lock_in
         local lock_out
+	[ "$CLIENTONLY" ] && skip "client only mode" && return 0
 	trap cleanup_34 EXIT RETURN
+
         for OPER in notimeout timeout ; do
                 rm $DIR1/$tfile 2>/dev/null
                 lock_in=$(get_ost_lock_timeouts)
@@ -1243,6 +1245,7 @@ check_pdo_conflict() {
 # test 40: check non-blocking operations
 test_40a() {
 #define OBD_FAIL_ONCE|OBD_FAIL_MDS_PDO_LOCK    0x145
+	[ "$CLIENTONLY" ] && skip "client only mode" && return 0
 	do_facet $SINGLEMDS lctl set_param fail_loc=0x80000145
 	mkdir $DIR1/$tfile &
 	PID1=$!
@@ -1276,6 +1279,7 @@ run_test 40a "pdirops: create vs others =============="
 
 test_40b() {
 #define OBD_FAIL_ONCE|OBD_FAIL_MDS_PDO_LOCK    0x145
+	[ "$CLIENTONLY" ] && skip "client only mode" && return 0
 	do_facet $SINGLEMDS lctl set_param fail_loc=0x80000145
 	touch $DIR1/$tfile &
 	PID1=$!
@@ -1309,6 +1313,7 @@ test_40b() {
 run_test 40b "pdirops: open|create and others =============="
 
 test_40c() {
+	[ "$CLIENTONLY" ] && skip "client only mode" && return 0
 	touch $DIR1/$tfile
 #define OBD_FAIL_ONCE|OBD_FAIL_MDS_PDO_LOCK    0x145
 	do_facet $SINGLEMDS lctl set_param fail_loc=0x80000145
@@ -1344,6 +1349,7 @@ test_40c() {
 run_test 40c "pdirops: link and others =============="
 
 test_40d() {
+	[ "$CLIENTONLY" ] && skip "client only mode" && return 0
 	touch $DIR1/$tfile
 #define OBD_FAIL_ONCE|OBD_FAIL_MDS_PDO_LOCK    0x145
 	do_facet $SINGLEMDS lctl set_param fail_loc=0x80000145
@@ -1378,6 +1384,7 @@ test_40d() {
 run_test 40d "pdirops: unlink and others =============="
 
 test_40e() {
+	[ "$CLIENTONLY" ] && skip "client only mode" && return 0
 	touch $DIR1/$tfile
 #define OBD_FAIL_ONCE|OBD_FAIL_MDS_PDO_LOCK    0x145
 	do_facet $SINGLEMDS lctl set_param fail_loc=0x80000145
